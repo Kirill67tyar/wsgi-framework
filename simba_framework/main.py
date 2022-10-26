@@ -1,3 +1,8 @@
+from pprint import pprint as pp
+
+from .framework_requests import GetRequests, PostRequests
+
+
 class PageNotFond404:  # (Exception)
     def __call__(self, *args, **kwargs):
         return '404 empty', '404 Page Not Found',
@@ -12,6 +17,29 @@ class Framework:
         self.routes_dict = routes_obj
 
     def __call__(self, environ, start_response):
+
+        # --------- console ----------
+        # pp(environ)
+        # --------- console ----------
+
+        request = {}
+
+        request['method'] = environ['REQUEST_METHOD']
+
+        if request['method'] == 'GET':
+            request['data'] = GetRequests().get_data(environ)
+
+            # --------- console ----------
+            # pp(request['data'])
+            # --------- console ----------
+
+        elif request['method'] == 'POST':
+            request['data'] = PostRequests().get_data(environ)
+
+            # --------- console ----------
+            pp(request['data'])
+            # --------- console ----------
+
         # получаем адрес по которому пользователь выполнил переход
         path = environ['PATH_INFO']
         if not path.endswith('/'):
@@ -24,7 +52,7 @@ class Framework:
             view = PageNotFond404()  # заглушка
 
         # запускаем контроллер
-        status_code, body = view()
+        status_code, body = view(request)
 
         # start_response - отправляет код ответа и заголовки
         start_response(status_code, [('Content-Type', 'text/html',), ])
