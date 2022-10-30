@@ -14,11 +14,6 @@ class Index:
         ),
 
 
-"""
-template_name, folder='templates', context={}
-"""
-
-
 class About:
     # def __init__(self, request, *args, **kwargs):
     #     self.request = request

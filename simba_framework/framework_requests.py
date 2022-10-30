@@ -1,3 +1,6 @@
+import quopri
+
+
 class BaseRequest:
 
     @staticmethod
@@ -16,29 +19,39 @@ class BaseRequest:
 
 class GetRequests(BaseRequest):
 
-    def get_data(self, environ: dict):
-        print(environ['QUERY_STRING'])
+    def get_data(self, environ: dict) -> dict:
+        # --------- console ----------
+        # print(environ['QUERY_STRING'])
+        # --------- console ----------
+
         return self.pars_data(environ['QUERY_STRING'])
 
 
 class PostRequests(BaseRequest):
 
     @staticmethod
-    def get_wsgi_input_data(environ: dict) -> bytes:
+    def get_wsgi_input_data(environ: dict) -> str:
         data = b''
         if environ.get('CONTENT_LENGTH'):
             content_length = int(environ['CONTENT_LENGTH'])
             if content_length:
                 data = environ['wsgi.input'].read(content_length)
+        data = data.decode('utf-8')
         return data
 
-    def get_data(self, environ: dict):
-        result = {}
-        data_bytes = self.get_wsgi_input_data(environ)
-        if data_bytes:
-            data_str = data_bytes.decode('utf-8')
-            result = self.pars_data(data_str)
-        return result
+    @staticmethod
+    def decode_value(data: dict) -> dict:
+        new_data = {}
+        for k, v in data.items():
+            val = bytes(v.replace('%', '=').replace('+', ' '), 'UTF-8')
+            val_decode_str = quopri.decodestring(val).decode('utf-8')
+            new_data[k] = val_decode_str
+        return new_data
+
+    def get_data(self, environ: dict) -> dict:
+        data = self.get_wsgi_input_data(environ)
+        data = self.pars_data(data)
+        return self.decode_value(data)
 
 
 """
