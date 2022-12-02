@@ -1,4 +1,9 @@
 import quopri
+from pprint import pprint as pp
+
+from common.analyzetools import (
+    p_type, p_dir, p_mro,
+)
 
 
 class BaseRequest:
@@ -36,11 +41,20 @@ class PostRequests(BaseRequest):
             content_length = int(environ['CONTENT_LENGTH'])
             if content_length:
                 data = environ['wsgi.input'].read(content_length)
-        data = data.decode('utf-8')
+
+                # # --------- console ----------
+                # p_type(environ['wsgi.input'])  # <class '_io.BufferedReader'>
+                # p_type(data)  # <class 'bytes'>
+                # # --------- console ----------
+
+        data = data.decode('utf-8')  # декодируем из байтов в str
         return data
 
     @staticmethod
     def decode_value(data: dict) -> dict:
+        """
+            Это нужно для кириллицы
+        """
         new_data = {}
         for k, v in data.items():
             val = bytes(v.replace('%', '=').replace('+', ' '), 'UTF-8')
@@ -49,9 +63,10 @@ class PostRequests(BaseRequest):
         return new_data
 
     def get_data(self, environ: dict) -> dict:
-        data = self.get_wsgi_input_data(environ)
-        data = self.pars_data(data)
-        return self.decode_value(data)
+        data = self.get_wsgi_input_data(environ)  # some_key=hello-from-data&another-key=Кириллица
+        data = self.pars_data(data)  # {'some_key': 'hello-from-data', ...
+        data = self.decode_value(data)  # {'some_key': 'hello-from-data', ...
+        return data
 
 
 """

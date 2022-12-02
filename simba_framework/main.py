@@ -30,9 +30,9 @@ class Framework:
         # pp(environ)
         # --------- console ----------
 
-        request = {}
-
-        request['method'] = environ['REQUEST_METHOD']
+        request = {
+            'method': environ['REQUEST_METHOD'],
+        }
 
         if request['method'] == 'GET':
             request['data'] = GetRequests().get_data(environ)
@@ -44,10 +44,10 @@ class Framework:
         elif request['method'] == 'POST':
             request['data'] = PostRequests().get_data(environ)
 
-            # --------- console ----------
-            pp(request['data'])
-            pp(self.decode_value(request['data']))
-            # --------- console ----------
+            # # --------- console ----------
+            # pp(request['data'])
+            # pp(self.decode_value(request['data']))
+            # # --------- console ----------
 
         # получаем адрес по которому пользователь выполнил переход
         path = environ['PATH_INFO']

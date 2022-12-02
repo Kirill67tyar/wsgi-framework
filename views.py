@@ -10,7 +10,8 @@ class Index:
         return '200 ok', render(
             template_name='index.html',
             folder='templates',
-            context={}
+            context={'variable': 'IMPORTANT DATA', },
+            # context={},
         ),
 
 
