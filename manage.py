@@ -3,6 +3,7 @@ from wsgiref.simple_server import make_server
 
 from urls import urlpatterns
 from simba_framework.main import Framework, ForExit, output_in_console
+from common.analyzetools import delimiter
 
 """def make_server(
     host, port, app, server_class=WSGIServer, handler_class=WSGIRequestHandler
@@ -20,6 +21,7 @@ if len(sys.argv) > 1:
         elif '--port' in a:
             port = int(a.split('=')[-1])
 
+
 # создаём wsgi-сервер, который будет прослушивать указанный хост и порт
 # with make_server(host, port, app=application) as server:
 #     print('Запуск с нашего фреймворка')
@@ -36,7 +38,23 @@ if len(sys.argv) > 1:
 #         raise SystemExit('Server finished working')
 
 
-with ForExit() as for_exit:
-    with make_server(host, port, app=application) as server:
-        output_in_console(server)
-        server.serve_forever()
+def runserver():
+    with ForExit() as for_exit:
+        with make_server(host, port, app=application) as server:
+            output_in_console(server)
+            server.serve_forever()
+
+
+def main():
+    commands = sys.argv.copy()
+    commands = list(map(lambda x: x.lower(), commands))
+    if 'runserver' in commands:
+        runserver()
+    else:
+        delimiter()
+        print('ERROR')
+        print('May be you want use command "runserver"')
+
+
+if __name__ == '__main__':
+    main()

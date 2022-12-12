@@ -1,7 +1,6 @@
 import sys
 import quopri
 from pprint import pprint as pp
-from wsgiref.simple_server import make_server
 
 from .framework_requests import GetRequests, PostRequests
 from common.analyzetools import (
@@ -69,7 +68,7 @@ class Framework:
         # передаём через WSGI коннектор на сторону web-сервера байты
         # преращая str в байты
         # nginx или apache передаст само тело ответа клиенту
-        return [body.encode('utf-8'), ]
+        return [body.encode('utf-8'), ]  # из str в байты
 
     @staticmethod
     def decode_value(data: dict) -> dict:
