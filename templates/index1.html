@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+Школа программирования
+{% endblock %}
+
+{% block style %}
+{% include 'inc_/_style.html' %}
+{% endblock %}
+
+
+Обучение программированию
+
+{% block menu %}
+{% include 'inc_/_menu.html' %}
+<p>
+    <!--		о чудо, шаблонизация работает -->
+    some variable - {{ variable }}
+</p>
+
+{% endblock %}
+
+{% block content %}
+{% include 'inc_/_content.html' %}
+{% endblock %}
+
+
+

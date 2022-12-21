@@ -55,16 +55,31 @@ class PostRequests(BaseRequest):
         """
             Это нужно для кириллицы
         """
+        # # --------- console ----------
+        # # кириллица до преобразования
+        # pp(data)
+        # # --------- console ----------
+
+        print('\n')
         new_data = {}
         for k, v in data.items():
             val = bytes(v.replace('%', '=').replace('+', ' '), 'UTF-8')
-            val_decode_str = quopri.decodestring(val).decode('utf-8')
+            val_decode_str = quopri.decodestring(val).decode('UTF-8')
             new_data[k] = val_decode_str
+
+        # # --------- console ----------
+        # # кириллица после преобразования
+        # pp(new_data)
+        # # --------- console ----------
+
         return new_data
 
     def get_data(self, environ: dict) -> dict:
+        # получаем данные из словаря окружения, преобразовывая байты в str
         data = self.get_wsgi_input_data(environ)  # some_key=hello-from-data&another-key=Кириллица
+        # преобразуем данные из str в dict
         data = self.pars_data(data)  # {'some_key': 'hello-from-data', ...
+        # для обработки кириллицы
         data = self.decode_value(data)  # {'some_key': 'hello-from-data', ...
         return data
 

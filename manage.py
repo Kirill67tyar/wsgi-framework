@@ -2,12 +2,18 @@ import sys
 from wsgiref.simple_server import make_server
 
 from urls import urlpatterns
-from simba_framework.main import Framework, ForExit, output_in_console
+from simba_framework.main import (
+    Framework,
+    ForExit,
+    output_in_console,
+)
 from common.analyzetools import delimiter
 
-"""def make_server(
-    host, port, app, server_class=WSGIServer, handler_class=WSGIRequestHandler
-):"""
+"""
+    def make_server(
+        host, port, app, server_class=WSGIServer, handler_class=WSGIRequestHandler
+    ):
+"""
 
 application = Framework(routes_obj=urlpatterns)
 
